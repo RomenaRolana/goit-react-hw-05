@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: 'Arial', sans-serif; /* Updated font */
+}
+
+.navLink {
+  text-decoration: none;
+  display: flex;
+  padding: 10px 15px;
+  border: 2px solid #007BFF; /* Blue border */
+  border-radius: 5px; /* Rounded borders */
+  background-color: transparent;
+  color: #007BFF; /* Blue text to match the border */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+}
+
+.navLink:hover {
+  background-color: #007BFF; /* Blue background on hover */
+  color: white; /* White text on hover */
+}
+
+.active {
+  background-color: #28A745; /* Green background for active */
+  color: white; /* White text for active */
+  border-color: #28A745; /* Green border to match */
+}
+
