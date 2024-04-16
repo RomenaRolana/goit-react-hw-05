@@ -5,19 +5,23 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
-  // const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get("query");
+  const query = searchParams.get("query") || '';
 
   useEffect(() => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) return;
+    setLoading(true);
     async function getMovies() {
-      if (query === null) return;
       try {
-        const response = await getMovieByQuery(query);
-        console.log(response.data.results);
+        const response = await getMovieByQuery(trimmedQuery);
         setMovies(response.data.results);
+        setLoading(false);
       } catch (error) {
-        console.log(error);
+        setError('Failed to fetch movies.');
+        setLoading(false);
       }
     }
     getMovies();
@@ -29,15 +33,15 @@ const MoviesPage = () => {
 
   return (
     <>
-      <Link to='/'>Додому</Link>
+      <Link to='/'>Home</Link>
       <Formik initialValues={{ searchMovie: "" }} onSubmit={handleSubmit}>
         <Form>
-          <h2>Пощук фільму по імені</h2>
+          <h2>Search for a movie by name</h2>
           <label>
             <Field
-              type='текст'
-              name='пошук'
-              placeholder='Введіть пошук...'
+              type='text'
+              name='searchMovie'
+              placeholder='Enter search...'
             />
           </label>
           <button type='submit' aria-label='Search'>
@@ -47,10 +51,16 @@ const MoviesPage = () => {
       </Formik>
 
       <div>
-        {movies.length > 0 ? (
-          <MovieList movies={movies} />
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>{error}</p>
         ) : (
-          <p>Введіть чергу пошуку &#128579;</p>
+          movies.length > 0 ? (
+            <MovieList movies={movies} />
+          ) : (
+            <p>Enter a search query &#128579;</p>
+          )
         )}
       </div>
     </>
@@ -58,3 +68,5 @@ const MoviesPage = () => {
 };
 
 export default MoviesPage;
+
+
